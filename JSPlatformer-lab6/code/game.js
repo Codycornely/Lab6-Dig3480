@@ -31,7 +31,7 @@ function Level(plan) {
         else if (ch == "@")
         fieldType = "player";
       // Because there is a third case (space ' '), use an "else if" instead of "else"
-      //made the check for lava state here.
+      //made the check for lava state here...
       else if (ch == "!")
         fieldType = "lava";
 
