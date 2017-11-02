@@ -160,16 +160,16 @@ DOMDisplay.prototype.scrollPlayerIntoView = function() {
 //adding lab6 video additions here.
 
 Level.prototype.obstacleAt = function(pos,size) {
-    var xStart = math.floor(pos.x);
-    var xEnd = math.ceil(pos.x + size.x);
-    var yStart = math.floor(pos.y);
-    var yEnd = math.ceil(pos.y + size.y);
+    var xStart = Math.floor(pos.x);
+    var xEnd = Math.ceil(pos.x + size.x);
+    var yStart = Math.floor(pos.y);
+    var yEnd = Math.ceil(pos.y + size.y);
 
     if (xStart < 0 || xEnd > this.width || yStart < 0 || yEnd > this.height)
-        return 'wall';
+        return "wall";
         //should add lava in theory? or at least trigger it.
     if (yEnd > this.height)
-      return 'lava';
+      return "lava";
 
         for (var y =yStart; y < yEnd; y++) {
           for (var x = xStart; x < xEnd; x++)
@@ -179,9 +179,20 @@ Level.prototype.obstacleAt = function(pos,size) {
               }
         }
 };
-//had to look into eleoqent qavascript for this...
-
-
+//had to look into eloquentjavascript for this...
+Level.prototype.actorAt = function(actor) {
+  //This should look for actors and boundary overlaps..? Well, it works!
+  for (var i = 0; i < this.actors.length; i++) {
+    var other = this.actors[i];
+    if (other != actor &&
+        actor.pos.x + actor.size.x > other.pos.x &&
+        actor.pos.x < other.pos.x + other.size.x &&
+        actor.pos.y + actor.size.y > other.pos.y &&
+        actor.pos.y < other.pos.y + other.size.y)
+      return other;
+  }
+};
+// now I can tell when I'm overlapping? I think? I'll have to check in class..
 // Update simulation each step based on keys & step size
 Level.prototype.animate = function(step, keys) {
 
@@ -195,6 +206,9 @@ Level.prototype.animate = function(step, keys) {
   }
 };
 
+//now for the scary part... lets see if we can make lava 'kill'...
+// what happened to the peaceful world where nothing killed eachother!? IM A MONSTER! *lol
+//(╯°□°）╯︵ ┻━┻........ huh, obsticle at actually identifies by type... that made things easier.
 var maxStep = 0.05;
 
 var playerXSpeed = 7;
@@ -207,12 +221,13 @@ Player.prototype.moveX = function(step, level, keys) {
   var motion = new Vector(this.speed.x * step, 0);
   var newPos = this.pos.plus(motion);
   var obstacle = level.obstacleAt(newPos, this.size);
+
   if (obstacle != "wall")
   this.pos = newPos;
 };
 
-var gravity = 30;
-var jumpSpeed = 17;
+var gravity = 25;
+var jumpSpeed = 20;
 var playerYSpeed = 6;
 
 Player.prototype.moveY = function(step, level, keys) {
@@ -225,7 +240,13 @@ Player.prototype.moveY = function(step, level, keys) {
         this.speed.y = -jumpSpeed;
         else
           this.speed.y = 0;
-  }     else {
+}
+        else if (obstacle == "lava") {
+          //FOR VICTORY AND HONOR!  (ง'̀-'́)ง
+          //just found out that my computer won't let me play the game.... DAMN MACS!
+          this.pos(10,10);
+
+        } else {
     this.pos = newPos;
   }
 };
