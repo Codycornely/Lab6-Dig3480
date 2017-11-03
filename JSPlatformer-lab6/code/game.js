@@ -235,18 +235,15 @@ Player.prototype.moveY = function(step, level, keys) {
   var motion = new Vector(0, this.speed.y * step);
   var newPos = this.pos.plus(motion);
   var obstacle = level.obstacleAt(newPos, this.size);
+  if (obstacle == 'lava') {
+    this.pos = Vector(10, 10); //I DID IT!!!!!! YYYEEESSSSS!!! DIE!...wait.. your not supposed to come back right?
+  }
   if (obstacle) {
       if (keys.up && this.speed.y > 0)
         this.speed.y = -jumpSpeed;
         else
           this.speed.y = 0;
-}
-        else if (obstacle == "lava") {
-          //FOR VICTORY AND HONOR!  (ง'̀-'́)ง
-          //just found out that my computer won't let me play the game.... DAMN MACS!
-          this.pos(10,10);
-
-        } else {
+          }  else {
     this.pos = newPos;
   }
 };
@@ -257,8 +254,8 @@ Player.prototype.act = function(step, level, keys) {
 };
 
 
-// Arrow key codes for readibility
-var arrowCodes = {37: "left", 38: "up", 39: "right", 40: "down"};
+// Arrow key codes for readibility, don't really need down do we?
+var arrowCodes = {37: "left", 38: "up", 39: "right",};
 
 // Translate the codes pressed from a key event
 function trackKeys(codes) {
